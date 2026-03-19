@@ -1,11 +1,13 @@
 ---
 name: safe-refactor-engine
-description: Plan and execute safe code refactors in a language-agnostic way using mandatory clarification, behavior-preserving slices, contract checks, and lightweight verification. Use when the user asks to refactor, split large units, extract modules, rename or move responsibilities, reduce complexity, or improve structure without changing intended behavior.
+description: Plan and execute safe code refactors in a language-agnostic way using mandatory clarification, behavior-preserving slices, rollback discipline, contract checks, and per-slice verification. Use when the user asks to refactor, split large units, extract modules, rename or move responsibilities, reduce complexity, or improve structure without changing intended behavior.
 ---
 
 # Safe Refactor Engine
 
 Use this skill to turn a refactor request into a controlled sequence of small, verifiable changes. Stay language-agnostic: reason from responsibilities, contracts, boundaries, and side effects instead of assuming a specific stack, framework, or type system.
+
+Default to conservative execution. Preserve observable behavior unless the user explicitly asks for behavior change.
 
 ## Core Principles
 
@@ -18,6 +20,14 @@ Apply these principles as decision rules during the refactor:
 - **Separation of Concerns**: keep domain rules, boundary handling, orchestration, and side effects from collapsing into one place
 
 If principles conflict, preserve behavior first, then optimize for simplicity and clarity over cleverness.
+
+Also enforce these operating rules:
+
+- prefer 1 to 5 small slices over one broad rewrite
+- verify every slice before continuing
+- use the cheapest trustworthy signal first: type-check, targeted test, then broader validation
+- do not keep pushing through failing slices; stabilize or roll back
+- avoid replacing complex human code with equally opaque AI-shaped abstractions
 
 ## Workflow
 
@@ -46,6 +56,7 @@ After clarification, classify the request before proposing edits:
 - **Local**: one file or one narrow behavior.
 - **Slice**: several related files in one subsystem.
 - **Architectural**: cross-cutting move, layering cleanup, or ownership redistribution.
+- **Dry-Run**: planning only; no code edits. Use when the user wants a safe refactor proposal before authorizing execution.
 
 Confirm these invariants from the local codebase:
 - what behavior must stay the same
@@ -66,6 +77,16 @@ Inspect only the code needed to answer these questions:
 Do not widen the scan unless local evidence shows cross-cutting impact.
 If the refactor depends on uncertain library or API behavior, use the agent's own tools or relevant MCPs to ground that knowledge before planning the change.
 
+If the skill relies on bundled references, read only the specific files needed before planning. If the references are missing, continue with local inspection and explicitly note that the refactor is proceeding without optional reference material.
+
+Reference guide:
+
+- read `references/slicing.md` when the safe slice order is unclear
+- read `references/patterns.md` when choosing between common refactor moves
+- read `references/verification.md` when selecting the smallest trustworthy check
+- read `references/evaluation.md` when validating whether the skill behaves correctly on realistic prompts
+- read `references/real-world-validation.md` when validating the skill against an actual refactor task
+
 ### Step 4: Choose the Smallest Safe Transformation
 Prefer one of these moves before inventing a bigger rewrite:
 
@@ -80,9 +101,6 @@ Prefer one of these moves before inventing a bigger rewrite:
 
 Avoid cosmetic churn. Do not reformat unrelated code just because the file is open.
 Reject transformations that add indirection without reducing real complexity, or that centralize unrelated responsibilities in the name of reuse.
-
-For slicing guidance, read `../../references/slicing.md`.
-For common transformations, read `../../references/patterns.md`.
 
 ### Step 5: Plan the Refactor as Slices
 Express the refactor as 1 to 5 behavior-preserving slices. Each slice must have:
@@ -100,6 +118,7 @@ Prefer sequences like:
 4. remove obsolete code
 
 Do not mix structural moves with logic changes unless the user explicitly asked for both.
+If a behavior change appears necessary during a structural refactor, stop and either split it into a separate slice or ask the user to approve the behavior change explicitly.
 
 ### Step 6: Run a Pre-Write Check
 Before editing, verify:
@@ -110,45 +129,72 @@ Before editing, verify:
 - new abstractions pay for themselves
 - there is a concrete regression check for each changed contract
 - the change respects KISS, DRY, YAGNI, SRP, and separation of concerns
+- the worktree state is understood before edits start
 
 If syntax-aware tooling exists for the current stack, prefer it. Otherwise do a guarded manual refactor and keep the diff smaller.
 If stack behavior is unclear, inspect manifests, lockfiles, local configs, or official docs through the available tools instead of asking the user to explain the library unless the project has a custom rule the tools cannot reveal.
+Before choosing verification commands, discover the repo's real checks from package manifests, task runners, CI config, makefiles, scripts, or local documentation instead of assuming default commands.
+In monorepos or multi-package repos, prefer package-local checks for the target scope before escalating to repo-wide verification, unless the touched contract clearly crosses package boundaries.
 
-### Step 7: Activate the Smallest Agent Mesh
-Use the capability-oriented mesh defined in `../../references/agents/registry.md`. Activate only the smallest set needed for the current depth:
+Before the first edit, inspect version-control state when available:
 
-1. **Observability Agent**: use `../../references/agents/observability.md` to extract structural telemetry, dependency edges, hotspots, and quality signals.
-2. **Blueprint Architect**: use `../../references/agents/blueprint_architect.md` when requirements or target structure are still unclear and you need a concrete refactor blueprint first.
-3. **Refactoring Engine**: use `../../references/agents/refactoring_engine.md` to execute paradigm-aware, syntax-aware transformations while preserving behavior.
-4. **Regression Sentinel**: use `../../references/agents/regression_sentinel.md` to compare state A and state B for interface drift, contract changes, or side-effect changes.
-5. **Execution Orchestrator**: use `../../references/agents/execution_orchestrator.md` to run the smallest meaningful verification command and normalize failures.
-6. **Governance & Compliance**: use `../../references/agents/governance_validator.md` to enforce KISS, DRY, YAGNI, SRP, lint-like rules, and architecture policies.
-7. **Synthesis Reporting**: use `../../references/agents/synthesis_reporting.md` to turn the other agents' outputs into a concise report for terminal or chat.
+- run `git status --short` or the local equivalent if available
+- do not overwrite or revert unrelated user changes
+- prefer atomic commits per completed slice when the environment and user workflow allow it
+- if the repo is dirty, work carefully around unrelated changes instead of cleaning the tree
+- if relevant checks are already failing before the refactor, record that baseline failure state before editing so later failures are compared against known pre-existing breakage
 
-In Quick mode, two or three agents are usually enough. In Standard mode, use only the agents needed by the current slice. In Deep mode, build the full mesh if the refactor crosses contracts, boundaries, or architectural layers.
+### Step 7: Validate From Multiple Perspectives
+Before and after each meaningful slice, evaluate the change from these perspectives:
+
+1. **Architecture**: does the structure become clearer and more local, or did the refactor just move complexity around?
+2. **Contracts**: did any public interface, data shape, side effect, or persistence behavior drift unintentionally?
+3. **Execution**: what is the smallest trustworthy command that can prove the slice still works?
+4. **Maintainability**: did the new code become easier to read and change, or did it introduce AI-shaped indirection?
+
+Use actual sub-agents only if the environment supports them and delegation materially helps. Otherwise, apply these perspectives directly as a single-agent checklist.
 
 ### Step 8: Execute and Verify Per Slice
 After each slice:
 
 - run the smallest meaningful test or check
+- run the type-checker for typed stacks whenever available
 - inspect interface and contract drift
 - confirm side effects still happen in the right place
 - stop if the evidence contradicts the plan
 
-For verification guidance, read `../../references/verification.md`.
+Verification priority:
 
-### Step 9: Summarize Refactor State
+1. syntax or compile check
+2. type-check
+3. targeted test for changed contract
+4. broader suite only when the slice or repo risk justifies it
+
+Use the repository's actual command names and scripts when available. Do not assume `tsc`, `pytest`, `cargo test`, or similar defaults if the project defines its own wrappers or task aliases.
+If the baseline is already red, compare the post-slice result against the pre-refactor failure state and report only new or changed breakage as potential slice regressions.
+
+### Step 9: Handle Failure Explicitly
+If a slice fails:
+
+- make at most 1 to 2 focused repair attempts
+- if the slice does not stabilize, revert only that slice to the last verified functional state
+- report the blocker, evidence, and safest next seam instead of leaving the code half-broken
+
+Do not stack more changes on top of a failing slice.
+
+### Step 10: Summarize Refactor State
 Return a concise refactor summary that includes:
 
 - scope handled
 - slices completed
+- slices rolled back, if any
 - contracts preserved or intentionally changed
 - verification run
 - remaining follow-up refactors, if any
 
 If the refactor is too risky to complete safely in one pass, stop after the safe seam-creation slice and say what remains.
 
-### Step 10: Report the Outcome
+### Step 11: Report the Outcome
 Prefer reports that are directly readable in the terminal or chat. Do not target Slack, dashboards, or external presentation layers unless the user explicitly asks for them.
 
 ## Modes
@@ -162,12 +208,83 @@ Use for multi-file refactors inside one subsystem. Clarify the target outcome on
 ### Deep
 Use for architecture-sensitive or repo-wide refactors. Clarify goals and non-goals whenever they are not already explicit, map contracts first, then execute in stages with explicit verification after each stage.
 
+### Dry-Run
+Use when the user wants a refactor proposal without code changes. Produce the slice plan, contracts at risk, verification strategy, and rollback points, then stop before editing files.
+
 ## Output Shape
 
 Use the lightest output that fits the task:
 
 - **Quick**: short summary plus verification
 - **Standard**: slice plan plus summary of applied changes
-- **Deep**: slice plan, contract deltas, agent findings, and explicit remaining risks
+- **Deep**: slice plan, contract deltas, validation findings, and explicit remaining risks
+- **Dry-Run**: no edits; only plan, contracts, risks, and proposed verification
+
+Example output skeletons:
+
+### Quick Output
+
+```text
+Scope: local helper extraction in <file>
+Change: extracted duplicated validation into <helper>
+Contract preserved: public function names and outputs unchanged
+Verification: <smallest relevant command or probe>
+```
+
+### Standard Output
+
+```text
+Slices:
+1. add seam in <file>
+2. move logic to <module>
+3. update callers and remove obsolete path
+
+Contracts preserved:
+- public entrypoints unchanged
+- side effects still occur in the same boundary
+
+Verification:
+- <command 1>
+- <command 2>
+```
+
+### Deep Output
+
+```text
+Scope: subsystem refactor across <area>
+Slices completed:
+1. <slice>
+2. <slice>
+
+Contract deltas:
+- none intentional
+
+Validation findings:
+- architecture: <result>
+- contracts: <result>
+- execution: <result>
+- maintainability: <result>
+
+Remaining risks:
+- <risk>
+```
+
+### Dry-Run Output
+
+```text
+Proposed slices:
+1. <slice>
+2. <slice>
+
+Contracts at risk:
+- <contract>
+
+Verification plan:
+- <command or probe>
+
+Rollback points:
+- after slice 1
+- after slice 2
+```
 
 If you discover debt instead of a clean refactor path, hand off conceptually to audit mode and surface the blockers before changing code.
