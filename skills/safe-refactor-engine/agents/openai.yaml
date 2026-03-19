@@ -1,0 +1,4 @@
+interface:
+  display_name: "Safe Refactor Engine"
+  short_description: "Plan and execute safe code refactors"
+  default_prompt: "Use $safe-refactor-engine to plan and apply a safe refactor for the code in scope."
