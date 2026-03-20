@@ -54,10 +54,12 @@ safe-refactor-engine/
         ├── references/
         │   ├── evaluation.md
         │   ├── patterns.md
+        │   ├── refactor-catalog.md
         │   ├── real-world-validation.md
         │   ├── slicing.md
         │   └── verification.md
         └── scripts/
+            ├── dogfood_runner.py
             ├── quick_validate.py
             └── score_evaluation.py
 ```
@@ -114,6 +116,18 @@ Score a dogfooding run against the evaluation rubric:
 python3 skills/safe-refactor-engine/scripts/score_evaluation.py scores.json --prompt 1
 ```
 
+Create a dogfooding run with scorecard files:
+
+```bash
+python3 skills/safe-refactor-engine/scripts/dogfood_runner.py --prompts 2,9,18,19,23,24 --label smoke-suite
+```
+
+Run an interactive scoring session and write `summary.json` automatically:
+
+```bash
+python3 skills/safe-refactor-engine/scripts/dogfood_runner.py --prompts 2,9,18,19,23,24 --label smoke-suite --interactive
+```
+
 ## Main Files
 
 Installable skill:
@@ -128,6 +142,7 @@ Bundled references used by the skill:
 
 - [`skills/safe-refactor-engine/references/slicing.md`](./skills/safe-refactor-engine/references/slicing.md)
 - [`skills/safe-refactor-engine/references/patterns.md`](./skills/safe-refactor-engine/references/patterns.md)
+- [`skills/safe-refactor-engine/references/refactor-catalog.md`](./skills/safe-refactor-engine/references/refactor-catalog.md)
 - [`skills/safe-refactor-engine/references/verification.md`](./skills/safe-refactor-engine/references/verification.md)
 - [`skills/safe-refactor-engine/references/evaluation.md`](./skills/safe-refactor-engine/references/evaluation.md)
 - [`skills/safe-refactor-engine/references/real-world-validation.md`](./skills/safe-refactor-engine/references/real-world-validation.md)

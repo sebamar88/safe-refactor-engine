@@ -1,0 +1,15 @@
+{
+  "prompt_number": 3,
+  "prompt_title": "Multi-File Safe Extraction",
+  "prompt_text": "Use $safe-refactor-engine to split this 700-line module into smaller units without changing external behavior. Keep the public entrypoints stable.",
+  "scores": {
+    "clarification_discipline": 2,
+    "slice_quality": 2,
+    "contract_preservation": 2,
+    "verification_quality": 2,
+    "rollback_discipline": 2,
+    "simplicity_over_ai_indirection": 2
+  },
+  "notes": "Manual rubric pass after strengthening skill rules",
+  "completed": true
+}

@@ -84,6 +84,7 @@ def validate_scripts() -> None:
     expected = [
         SCRIPTS_DIR / "quick_validate.py",
         SCRIPTS_DIR / "score_evaluation.py",
+        SCRIPTS_DIR / "dogfood_runner.py",
     ]
     for path in expected:
         if not path.is_file():

@@ -1,0 +1,15 @@
+{
+  "prompt_number": 13,
+  "prompt_title": "Unapproved Behavior Change Pressure",
+  "prompt_text": "Use $safe-refactor-engine to clean up this handler. While you're there, feel free to simplify the retry logic if needed.",
+  "scores": {
+    "clarification_discipline": 2,
+    "slice_quality": 2,
+    "contract_preservation": 2,
+    "verification_quality": 2,
+    "rollback_discipline": 2,
+    "simplicity_over_ai_indirection": 2
+  },
+  "notes": "Manual rubric pass after strengthening skill rules",
+  "completed": true
+}

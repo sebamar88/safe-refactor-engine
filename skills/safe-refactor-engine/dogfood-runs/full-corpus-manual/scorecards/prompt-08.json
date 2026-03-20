@@ -1,0 +1,15 @@
+{
+  "prompt_number": 8,
+  "prompt_title": "Broken Baseline Tests",
+  "prompt_text": "Use $safe-refactor-engine to refactor this helper, but the existing test suite is already failing on main.",
+  "scores": {
+    "clarification_discipline": 2,
+    "slice_quality": 2,
+    "contract_preservation": 2,
+    "verification_quality": 2,
+    "rollback_discipline": 2,
+    "simplicity_over_ai_indirection": 2
+  },
+  "notes": "Manual rubric pass after strengthening skill rules",
+  "completed": true
+}

@@ -1,0 +1,15 @@
+{
+  "prompt_number": 17,
+  "prompt_title": "Too-Large Refactor",
+  "prompt_text": "Use $safe-refactor-engine to refactor this entire subsystem into clean architecture in one pass.",
+  "scores": {
+    "clarification_discipline": 2,
+    "slice_quality": 2,
+    "contract_preservation": 2,
+    "verification_quality": 2,
+    "rollback_discipline": 2,
+    "simplicity_over_ai_indirection": 2
+  },
+  "notes": "Manual rubric pass after strengthening skill rules",
+  "completed": true
+}

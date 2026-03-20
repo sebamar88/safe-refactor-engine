@@ -53,6 +53,18 @@ If you dogfood the skill against example prompts, record scores with:
 python3 skills/safe-refactor-engine/scripts/score_evaluation.py scores.json --prompt 1
 ```
 
+To create a reusable run folder with scorecards and an aggregate summary:
+
+```bash
+python3 skills/safe-refactor-engine/scripts/dogfood_runner.py --prompts 1-6 --label baseline
+```
+
+To score a run interactively and emit `summary.json` automatically:
+
+```bash
+python3 skills/safe-refactor-engine/scripts/dogfood_runner.py --prompts 1-6 --label baseline --interactive
+```
+
 ## Pull Request Standard
 
 Changes should explain:

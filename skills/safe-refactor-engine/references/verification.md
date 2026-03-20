@@ -34,6 +34,18 @@ Run the cheapest useful signal first:
 - run the narrowest test that exercises the public boundary
 - inspect response shapes, return values, and side effects explicitly
 
+### Framework-managed units
+
+- for hooks, inspect returned shape, update timing, and exposed callbacks
+- for request handlers, inspect response shape, status, emitted events, and logs where relevant
+- for workers or consumers, inspect event ordering, idempotency, retries, and writes
+
+### Generated boundaries
+
+- identify whether the touched path is generated, regenerated, or owned source
+- prefer verification that proves the seam works without editing generated artifacts directly
+- if regeneration is part of the workflow, verify the owned source first and only then run regeneration if the repo expects it
+
 ## When the Repo Has No Useful Tests
 
 Use a focused manual probe and record it explicitly:
@@ -42,6 +54,7 @@ Use a focused manual probe and record it explicitly:
 - input or trigger used
 - expected observable result
 - observed result
+- why this probe is sufficient for the touched contract
 
 Good examples:
 
@@ -49,6 +62,7 @@ Good examples:
 - call one HTTP endpoint with a stable fixture
 - run one UI flow that reaches the changed branch
 - execute one worker or job path with known sample data
+- trigger one hook consumer path and confirm the returned shape and observable state transitions
 
 Do not use vague statements like "looks fine" or "should still work" as verification.
 

@@ -1,0 +1,111 @@
+{
+  "created_at_utc": "2026-03-20T14:28:35.066917+00:00",
+  "label": "full-corpus-manual",
+  "selected_prompts": [
+    {
+      "prompt_number": 1,
+      "prompt_title": "Small Local Cleanup"
+    },
+    {
+      "prompt_number": 2,
+      "prompt_title": "Ambiguous Refactor Request"
+    },
+    {
+      "prompt_number": 3,
+      "prompt_title": "Multi-File Safe Extraction"
+    },
+    {
+      "prompt_number": 4,
+      "prompt_title": "Typed Stack Verification"
+    },
+    {
+      "prompt_number": 5,
+      "prompt_title": "Risky Architectural Move"
+    },
+    {
+      "prompt_number": 6,
+      "prompt_title": "Dry-Run Only"
+    },
+    {
+      "prompt_number": 7,
+      "prompt_title": "Dirty Worktree"
+    },
+    {
+      "prompt_number": 8,
+      "prompt_title": "Broken Baseline Tests"
+    },
+    {
+      "prompt_number": 9,
+      "prompt_title": "Repo Without Useful Tests"
+    },
+    {
+      "prompt_number": 10,
+      "prompt_title": "Monorepo Package Scope"
+    },
+    {
+      "prompt_number": 11,
+      "prompt_title": "Custom Task Runner"
+    },
+    {
+      "prompt_number": 12,
+      "prompt_title": "User-Approved Behavior Change"
+    },
+    {
+      "prompt_number": 13,
+      "prompt_title": "Unapproved Behavior Change Pressure"
+    },
+    {
+      "prompt_number": 14,
+      "prompt_title": "Public Rename Sensitivity"
+    },
+    {
+      "prompt_number": 15,
+      "prompt_title": "Dead Code Deletion"
+    },
+    {
+      "prompt_number": 16,
+      "prompt_title": "Rollback Under Red State"
+    },
+    {
+      "prompt_number": 17,
+      "prompt_title": "Too-Large Refactor"
+    },
+    {
+      "prompt_number": 18,
+      "prompt_title": "AI-Shaped Abstraction Trap"
+    },
+    {
+      "prompt_number": 19,
+      "prompt_title": "Cross-Boundary Side Effects"
+    },
+    {
+      "prompt_number": 20,
+      "prompt_title": "Cosmetic Plus Structural Scope Mix"
+    },
+    {
+      "prompt_number": 21,
+      "prompt_title": "Private Rename Only"
+    },
+    {
+      "prompt_number": 22,
+      "prompt_title": "Performance Hint Without Approval"
+    },
+    {
+      "prompt_number": 23,
+      "prompt_title": "Framework Hook Extraction"
+    },
+    {
+      "prompt_number": 24,
+      "prompt_title": "Generated File Boundary"
+    },
+    {
+      "prompt_number": 25,
+      "prompt_title": "Event Ordering Sensitivity"
+    },
+    {
+      "prompt_number": 26,
+      "prompt_title": "Shared Utility Temptation"
+    }
+  ],
+  "interactive": true
+}

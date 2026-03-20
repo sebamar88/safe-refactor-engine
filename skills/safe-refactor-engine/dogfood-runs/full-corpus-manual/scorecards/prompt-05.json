@@ -1,0 +1,15 @@
+{
+  "prompt_number": 5,
+  "prompt_title": "Risky Architectural Move",
+  "prompt_text": "Use $safe-refactor-engine to move persistence logic out of the domain layer across this subsystem, but do not break existing callers.",
+  "scores": {
+    "clarification_discipline": 2,
+    "slice_quality": 2,
+    "contract_preservation": 2,
+    "verification_quality": 2,
+    "rollback_discipline": 2,
+    "simplicity_over_ai_indirection": 2
+  },
+  "notes": "Manual rubric pass after strengthening skill rules",
+  "completed": true
+}

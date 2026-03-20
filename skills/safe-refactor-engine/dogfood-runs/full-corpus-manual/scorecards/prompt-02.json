@@ -1,0 +1,15 @@
+{
+  "prompt_number": 2,
+  "prompt_title": "Ambiguous Refactor Request",
+  "prompt_text": "Use $safe-refactor-engine to clean up this service. It's messy.",
+  "scores": {
+    "clarification_discipline": 2,
+    "slice_quality": 2,
+    "contract_preservation": 2,
+    "verification_quality": 2,
+    "rollback_discipline": 2,
+    "simplicity_over_ai_indirection": 2
+  },
+  "notes": "Manual rubric pass after strengthening skill rules",
+  "completed": true
+}

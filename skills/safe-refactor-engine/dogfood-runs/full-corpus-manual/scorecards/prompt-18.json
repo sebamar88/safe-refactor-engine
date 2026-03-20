@@ -1,0 +1,15 @@
+{
+  "prompt_number": 18,
+  "prompt_title": "AI-Shaped Abstraction Trap",
+  "prompt_text": "Use $safe-refactor-engine to simplify this module. A previous agent suggested adding a BaseManager, ProcessorFactory, and OrchestrationFacade.",
+  "scores": {
+    "clarification_discipline": 2,
+    "slice_quality": 2,
+    "contract_preservation": 2,
+    "verification_quality": 2,
+    "rollback_discipline": 2,
+    "simplicity_over_ai_indirection": 2
+  },
+  "notes": "Manual rubric pass after strengthening skill rules",
+  "completed": true
+}

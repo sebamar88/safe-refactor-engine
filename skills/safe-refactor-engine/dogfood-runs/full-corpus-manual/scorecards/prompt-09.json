@@ -1,0 +1,15 @@
+{
+  "prompt_number": 9,
+  "prompt_title": "Repo Without Useful Tests",
+  "prompt_text": "Use $safe-refactor-engine to split this CLI command handler. There are no meaningful tests in this repo.",
+  "scores": {
+    "clarification_discipline": 2,
+    "slice_quality": 2,
+    "contract_preservation": 2,
+    "verification_quality": 2,
+    "rollback_discipline": 2,
+    "simplicity_over_ai_indirection": 2
+  },
+  "notes": "Manual rubric pass after strengthening skill rules",
+  "completed": true
+}

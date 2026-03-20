@@ -1,0 +1,15 @@
+{
+  "prompt_number": 16,
+  "prompt_title": "Rollback Under Red State",
+  "prompt_text": "Use $safe-refactor-engine to extract side-effect logic from this worker. If verification fails, do not leave the repo in a broken state.",
+  "scores": {
+    "clarification_discipline": 2,
+    "slice_quality": 2,
+    "contract_preservation": 2,
+    "verification_quality": 2,
+    "rollback_discipline": 2,
+    "simplicity_over_ai_indirection": 2
+  },
+  "notes": "Manual rubric pass after strengthening skill rules",
+  "completed": true
+}

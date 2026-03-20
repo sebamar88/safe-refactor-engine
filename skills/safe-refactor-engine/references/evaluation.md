@@ -406,6 +406,122 @@ Failure signs:
 - produces a noisy diff with rename, formatting, and logic movement all mixed together
 - makes rollback harder through diff bloat
 
+## Additional Stress Cases
+
+### Prompt 21: Private Rename Only
+
+Prompt:
+
+```text
+Use $safe-refactor-engine to improve naming inside this file, but only for private helpers. Public exports must remain untouched.
+```
+
+Expected behavior:
+
+- keep the scope local and narrow
+- distinguish public API names from internal symbols
+- avoid turning a rename cleanup into a broader restructure
+
+Failure signs:
+
+- renames exports or externally referenced symbols
+- mixes rename work with extra structural changes
+
+### Prompt 22: Performance Hint Without Approval
+
+Prompt:
+
+```text
+Use $safe-refactor-engine to clean up this data loader. If you see an easy performance improvement, you can probably do that too.
+```
+
+Expected behavior:
+
+- recognize that performance change may alter behavior or tradeoffs
+- keep the structural refactor separate unless performance work is explicitly approved
+- ask or split if the optimization is non-trivial
+
+Failure signs:
+
+- treats cleanup as permission to change caching, batching, or ordering
+- bundles behavior-affecting optimization into the same slice
+
+### Prompt 23: Framework Hook Extraction
+
+Prompt:
+
+```text
+Use $safe-refactor-engine to extract business logic from this React hook into a plain module, but keep hook behavior and returned shape unchanged.
+```
+
+Expected behavior:
+
+- preserve hook contract and returned shape explicitly
+- separate framework wiring from domain logic
+- verify with the repo's actual frontend checks instead of guessed commands
+
+Failure signs:
+
+- changes the hook API while extracting logic
+- skips contract verification for returned state and side effects
+
+### Prompt 24: Generated File Boundary
+
+Prompt:
+
+```text
+Use $safe-refactor-engine to refactor this feature, but do not edit generated files. If the generated layer is involved, create a safe seam around it.
+```
+
+Expected behavior:
+
+- identify generated boundaries before editing
+- avoid direct edits in generated artifacts
+- create seams in owned code first
+
+Failure signs:
+
+- edits generated files anyway
+- ignores regeneration or ownership boundaries
+
+### Prompt 25: Event Ordering Sensitivity
+
+Prompt:
+
+```text
+Use $safe-refactor-engine to separate business rules from this event handler, but message ordering, idempotency, and emitted events must remain unchanged.
+```
+
+Expected behavior:
+
+- treat ordering and idempotency as contracts, not implementation details
+- isolate side effects carefully
+- verify non-return-value behavior, not just compilation
+
+Failure signs:
+
+- focuses only on signature preservation
+- changes the timing or order of emits without calling it out
+
+### Prompt 26: Shared Utility Temptation
+
+Prompt:
+
+```text
+Use $safe-refactor-engine to remove duplication between these two packages, but avoid creating a shared abstraction unless it clearly pays for itself.
+```
+
+Expected behavior:
+
+- verify the duplication is true policy duplication
+- resist premature shared libraries or base abstractions
+- consider keeping duplication if coupling cost would be worse
+
+Failure signs:
+
+- extracts a cross-package utility immediately
+- introduces a generic shared layer without proving the benefit
+
 ## Scoring Rubric
 
 Score each run from 0 to 2 on these dimensions:

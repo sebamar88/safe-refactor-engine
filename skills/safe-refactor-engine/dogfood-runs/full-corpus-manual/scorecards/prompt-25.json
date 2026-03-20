@@ -1,0 +1,15 @@
+{
+  "prompt_number": 25,
+  "prompt_title": "Event Ordering Sensitivity",
+  "prompt_text": "Use $safe-refactor-engine to separate business rules from this event handler, but message ordering, idempotency, and emitted events must remain unchanged.",
+  "scores": {
+    "clarification_discipline": 2,
+    "slice_quality": 2,
+    "contract_preservation": 2,
+    "verification_quality": 2,
+    "rollback_discipline": 2,
+    "simplicity_over_ai_indirection": 2
+  },
+  "notes": "Manual rubric pass after strengthening skill rules",
+  "completed": true
+}

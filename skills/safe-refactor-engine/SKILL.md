@@ -18,6 +18,12 @@ Use this section directly in Quick and Standard mode before opening any optional
 - avoid mixing rename, reformat, and logic movement in the same slice
 - if rollback would be messy, split the slice further
 - prefer seams around side effects, state mutation, and public entrypoints
+- when a smell is obvious, prefer the lightest move first: rename, extract function, isolate side effects, then extract module
+- for duplication, prove the duplicated paths share the same policy before unifying them
+- prefer guard clauses over pattern-heavy branching cleanup unless branch ownership is already stable
+- do not edit generated files; create or move seams in owned code around them
+- when tests are weak or absent, name one concrete manual probe before editing
+- for hooks, handlers, and adapters, preserve returned shape, side-effect timing, and emitted signals as contracts
 - reject vague abstractions like `Manager`, `Processor`, `Helper`, or thin wrappers that only forward calls
 - reject indirection that hides data flow without reducing coupling
 - if a local change needs whole-repo verification to feel safe, treat it as higher risk and reconsider slice size
@@ -85,6 +91,7 @@ Also estimate blast radius before planning edits:
 
 - search for direct callers, imports, references, exports, routes, handlers, events, or other usage sites of the target
 - count the affected files, not just the number of matches
+- identify generated files, generated directories, and regeneration boundaries before planning edits
 - if the likely impact reaches more than 5 files, upgrade to **Deep** mode unless the user explicitly constrained the scope narrower
 - if the blast radius is unclear, keep exploring before editing
 
@@ -98,6 +105,7 @@ Inspect only the code needed to answer these questions:
 
 Do not widen the scan unless local evidence shows cross-cutting impact.
 If the refactor depends on uncertain library or API behavior, use the agent's own tools or relevant MCPs to ground that knowledge before planning the change.
+If framework-managed units are involved, include framework-facing contracts in the scan, such as returned hook shape, handler response shape, event ordering, idempotency, and log or emit behavior.
 
 If the skill relies on bundled references, read only the specific files needed before planning. If the references are missing, continue with local inspection and explicitly note that the refactor is proceeding without optional reference material.
 
@@ -105,6 +113,7 @@ Reference guide:
 
 - read `references/slicing.md` only when the safe slice order is unclear after applying the cheat sheet
 - read `references/patterns.md` only when multiple refactor moves still look equally safe
+- read `references/refactor-catalog.md` when you need smell-to-move heuristics or need to choose between a simple extraction and a heavier pattern
 - read `references/verification.md` only when the smallest trustworthy check is not obvious
 - read `references/evaluation.md` when validating whether the skill behaves correctly on realistic prompts
 - read `references/real-world-validation.md` when validating the skill against an actual refactor task
@@ -153,6 +162,7 @@ Prefer rollback actions that are local and explicit:
 Before editing, verify:
 
 - the target location matches the project structure
+- generated artifacts and owned source boundaries are identified
 - the refactor reduces complexity instead of redistributing confusion
 - naming matches local conventions
 - new abstractions pay for themselves
@@ -173,6 +183,7 @@ Before the first edit, inspect version-control state when available:
 - do not overwrite or revert unrelated user changes
 - prefer atomic commits per completed slice when the environment and user workflow allow it
 - if relevant checks are already failing before the refactor, record that baseline failure state before editing so later failures are compared against known pre-existing breakage
+- if automation is weak, write down one concrete manual probe with trigger and expected observable result before the first slice
 
 ### Step 7: Validate From Multiple Perspectives
 Before and after each meaningful slice, evaluate the change from these perspectives:
@@ -182,6 +193,7 @@ Before and after each meaningful slice, evaluate the change from these perspecti
 3. **Execution**: what is the smallest trustworthy command that can prove the slice still works?
 4. **Maintainability**: did the new code become easier to read and change, or did it introduce AI-shaped indirection?
 5. **Governance**: does the result still respect KISS, DRY, YAGNI, SRP, and separation of concerns without speculative layering?
+6. **Ownership**: did the slice stay inside owned source, or did it accidentally rely on editing generated artifacts?
 
 Treat these as validation roles, not mandatory sub-agents. Use actual delegation only if the environment supports it and it materially helps; otherwise, apply the roles directly as a single-agent checklist.
 
@@ -199,11 +211,13 @@ Verification priority:
 1. syntax or compile check
 2. type-check
 3. targeted test for changed contract
-4. broader suite only when the slice or repo risk justifies it
+4. focused manual probe with recorded expected and observed result when automation is weak
+5. broader suite only when the slice or repo risk justifies it
 
 Use the repository's actual command names and scripts when available. Do not assume `tsc`, `pytest`, `cargo test`, or similar defaults if the project defines its own wrappers or task aliases.
 If the baseline is already red, compare the post-slice result against the pre-refactor failure state and report only new or changed breakage as potential slice regressions.
 If a typed or compiled repo exposes both lint and build or type-check commands, prefer the narrowest relevant pair after each slice.
+If the touched unit is a hook, handler, worker, or event consumer, explicitly check framework-facing contracts such as returned shape, response shape, emitted events, ordering, and idempotency.
 
 ### Step 9: Handle Failure Explicitly
 If a slice fails:

@@ -1,0 +1,15 @@
+{
+  "prompt_number": 22,
+  "prompt_title": "Performance Hint Without Approval",
+  "prompt_text": "Use $safe-refactor-engine to clean up this data loader. If you see an easy performance improvement, you can probably do that too.",
+  "scores": {
+    "clarification_discipline": 2,
+    "slice_quality": 2,
+    "contract_preservation": 2,
+    "verification_quality": 2,
+    "rollback_discipline": 2,
+    "simplicity_over_ai_indirection": 2
+  },
+  "notes": "Manual rubric pass after strengthening skill rules",
+  "completed": true
+}
